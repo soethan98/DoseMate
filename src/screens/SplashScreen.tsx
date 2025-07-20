@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { StyleSheet, View, Text, Animated } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-export default SplashScreen = () => {
+export default function SplashScreen() {
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const scaleAnim = useRef(new Animated.Value(0.5)).current;
 
@@ -14,7 +14,7 @@ export default SplashScreen = () => {
                 duration: 1000,
                 useNativeDriver: true,
             }),
-            Animated.timing(scaleAnim, {
+            Animated.spring(scaleAnim, {
                 toValue: 1,
                 tension: 10,
                 friction: 2,
