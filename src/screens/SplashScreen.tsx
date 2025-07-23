@@ -1,8 +1,13 @@
 import { useEffect, useRef } from "react";
 import { StyleSheet, View, Text, Animated } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { AppNavigationParamList } from "../navigation/AppNavigations";
 
-export default function SplashScreen() {
+
+type SplashScreenProps = NativeStackScreenProps<AppNavigationParamList, 'Splash'>;
+
+export default function SplashScreen({route, navigation}: SplashScreenProps) {
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const scaleAnim = useRef(new Animated.Value(0.5)).current;
 
@@ -25,7 +30,7 @@ export default function SplashScreen() {
         const timer = setTimeout(() => {
             // Navigate to the next screen or perform any action after the splash screen
             // For example, you can use navigation.navigate('NextScreen');
-            console.log("Splash screen finished");
+            navigation.replace('Auth'); // Replace with your Auth screen
         }, 2000);
         return () => clearTimeout(timer);
     }, []);
