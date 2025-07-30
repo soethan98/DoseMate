@@ -1,5 +1,5 @@
 import * as LocalAuthentication from 'expo-local-authentication'; // For types only
-import { createStore } from 'zustand';
+import { create, createStore } from 'zustand';
 import { authService } from '../services/authService';
 
 
@@ -14,7 +14,7 @@ interface AuthState {
 
 }
 
-export const authStore = createStore<AuthState>((set, get) => ({
+export const useAuthStore = create<AuthState>((set, get) => ({
     isAuthenticated: false,
     authInProgress: false,
     authError: null,
@@ -45,6 +45,7 @@ export const authStore = createStore<AuthState>((set, get) => ({
     authenticate: async () => {
         set({ authInProgress: true, authError: null });
         try {
+            console.log('Starting authentication process...');
             const result = await authService.authenticateAsync({
                 promptMessage: "Autheticate to access DoseMate",
                 fallbackLabel: "Use PIN",

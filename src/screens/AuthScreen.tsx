@@ -9,9 +9,26 @@ import {
     Dimensions,
     Image,
 } from "react-native";
+import { useAuthStore } from "../stores/authStore";
+import { AuthenticationType } from "expo-local-authentication";
 
 
 export default function AuthScreen() {
+
+    const {
+        isAuthenticated,
+        authInProgress,
+        authError,
+        biometricType,
+        checkBiometricSupport,
+        authenticate,
+        resetAuth,
+    } = useAuthStore();
+
+
+    useEffect(() =>{
+        checkBiometricSupport();
+    },[])
     return (
         <LinearGradient colors={["#4CAF50", "#2E7D32"]} style={styles.container}>
             <View style={styles.content}>
@@ -29,12 +46,30 @@ export default function AuthScreen() {
                         Welcome to Back!
                     </Text>
                     <Text style={styles.instructionText}>
-                        {"Enter your PIN to access your medications"}
+
+                        {biometricType ? "Use Face ID/Touch ID or PIN to access your medications" : "Enter your PIN to access your medications"}
+
                     </Text>
-                    <TouchableOpacity style={styles.button}>
-                        <Ionicons name="keypad" size={24} color="white" style={styles.buttonIcon} />
-                        <Text style={styles.buttonText}>Enter PIN</Text>
+                     <TouchableOpacity style={[styles.button, authInProgress && styles.buttonDisabled]} disabled={authInProgress} onPress={authenticate}>
+                        <Ionicons name={
+                            biometricType === AuthenticationType.FINGERPRINT ? "finger-print-outline" :
+                                biometricType === AuthenticationType.FACIAL_RECOGNITION ? "finger-print-outline" : "keypad-outline"
+                        } size={24} color="white" style={styles.buttonIcon} />
+                        <Text style={styles.buttonText}>
+                            {
+                                authInProgress ? "Authenticating..." :
+                                    biometricType ? "Authenticate" : "Enter PIN"
+                            }
+                        </Text>
                     </TouchableOpacity>
+                    {
+                        authError && (
+                            <View style={styles.errorContainer}>
+                                <Ionicons name="alert-circle" size={20} color="#f44336" />
+                                <Text style={styles.errorText}>{authError}</Text>
+                            </View>
+                        )
+                    } 
                 </View>
 
             </View>
